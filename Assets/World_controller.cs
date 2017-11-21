@@ -14,8 +14,8 @@ public class World_controller : MonoBehaviour {
 
         world_1_assets = get_world_assets("world_1");
         world_2_assets = get_world_assets("world_2");
+        toggle_worlds();
 
-        
     }
 
     // Update is called once per frame
