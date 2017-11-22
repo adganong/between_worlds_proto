@@ -7,7 +7,7 @@ public class World_controller : MonoBehaviour {
     public int world                    = 1;
     private bool switching_worlds       = false;
     public float slowdownFactor         = 0.03f;
-    public float slowdownLength         = 1f;
+    public float slowdownLength         = .5f;
     private bool time_Is_Slowed;
     private float starting_timeScale;
     private float starting_deltaTime;
@@ -34,13 +34,17 @@ public class World_controller : MonoBehaviour {
     void Update() {
         //check if the player is switching, and if he is, switch worlds
         update_switch();
-        adjustTime();
         if (switching_worlds) {
             toggle_worlds();
         }
-        if (time_Is_Slowed) {
-            check_for_slowtime_end();
-        }
+    }
+
+    void FixedUpdate() {
+        //check if the player is switching, and if he is, switch worlds
+        //adjustTime();
+        //if (time_Is_Slowed) {
+            //check_for_slowtime_end();
+        //}
     }
 
     //function to check for switch keypress
@@ -65,11 +69,11 @@ public class World_controller : MonoBehaviour {
     void toggle_worlds() {
         if(world == 1) {
             world = 2;
-            slowTime();
+            //slowTime();
             switch_worlds(true, false);
         } else if (world == 2) {
             world = 1;
-            slowTime();
+            //slowTime();
             switch_worlds(false, true);
         }
     }
@@ -87,7 +91,6 @@ public class World_controller : MonoBehaviour {
 
     void slowTime() {
         time_Is_Slowed = true;
-        Debug.Log(Time.timeScale.ToString());
         //grab time and set to our slowdownFactor
         Time.timeScale = slowdownFactor;
         //adjust fixed delta time to smooth frames
@@ -102,6 +105,7 @@ public class World_controller : MonoBehaviour {
         Debug.Log(Time.timeScale.ToString());
         Debug.Log(starting_timeScale.ToString());
         if (Time.timeScale == starting_timeScale) {
+            Debug.Log("Made it inside the end");
             Time.fixedDeltaTime = starting_deltaTime;
             time_Is_Slowed = false;
         }
