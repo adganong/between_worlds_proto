@@ -57,10 +57,4 @@ public class World_controller : MonoBehaviour {
         }
     }
 
-    IEnumerator doSomething()
-    {
-            //do something here
-            yield return WaitForSeconds(10);
-    }
-
 }
