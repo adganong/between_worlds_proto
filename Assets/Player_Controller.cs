@@ -19,7 +19,6 @@ public class Player_Controller : MonoBehaviour {
         bool testIfRunning;
         //Controls
         moveX = Input.GetAxis("Horizontal");
-        Debug.Log(moveX);
         if (Input.GetButtonDown("Jump") && jumpcount < 2) {
             jumpcount++;
             Jump();
@@ -54,7 +53,7 @@ public class Player_Controller : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D trig) {
-        Debug.Log("Has hit the end of the level");
+
     }
     //For science!
     /*//declerations

@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class World_controller : MonoBehaviour {
     //declared variables
-    public int world                = 1;
-    private bool switching_worlds   = false;
+    public int world                    = 1;
+    private bool switching_worlds       = false;
+    public float slowdownFactor         = 0.03f;
+    public float slowdownLength         = 1f;
+    private bool time_Is_Slowed;
+    private float starting_timeScale;
+    private float starting_deltaTime;
 
     //undeclared variables
     private GameObject[] world_1_assets;
@@ -13,21 +18,32 @@ public class World_controller : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        //call function to get me the array of all objects in the worlds
+        world_1_assets          = get_world_assets("world_1");
+        world_2_assets          = get_world_assets("world_2");
+        starting_timeScale      = Time.timeScale;
+        starting_deltaTime      = Time.fixedDeltaTime;
+        time_Is_Slowed          = false;
 
-        world_1_assets = get_world_assets("world_1");
-        world_2_assets = get_world_assets("world_2");
-        toggle_worlds();
+        //call toggle for the first time to make sure only one world is showing (this could be done in a much cleaner way)
+        switch_worlds(true, false);
 
     }
 
     // Update is called once per frame
     void Update() {
+        //check if the player is switching, and if he is, switch worlds
         update_switch();
+        adjustTime();
         if (switching_worlds) {
             toggle_worlds();
         }
+        if (time_Is_Slowed) {
+            check_for_slowtime_end();
+        }
     }
 
+    //function to check for switch keypress
     void update_switch() {
         switching_worlds = Input.GetKeyDown(KeyCode.E);
     }
@@ -37,6 +53,7 @@ public class World_controller : MonoBehaviour {
         return GameObject.FindGameObjectsWithTag(which);
     }
 
+    //loops through all assets in the chosen world and sets either true or false
     void switch_world(GameObject[] all_world_assets, bool status) {
         foreach(GameObject individual_asset in all_world_assets) {
             individual_asset.SetActive(status);
@@ -44,17 +61,51 @@ public class World_controller : MonoBehaviour {
     }
 
 
-    //detect whihc world is currently active and switch the world based on that
+    //detect which world is currently active and switch the world based on that
     void toggle_worlds() {
         if(world == 1) {
             world = 2;
-            switch_world(world_2_assets, true);
-            switch_world(world_1_assets, false);
+            slowTime();
+            switch_worlds(true, false);
         } else if (world == 2) {
             world = 1;
-            switch_world(world_2_assets, false);
-            switch_world(world_1_assets, true);
+            slowTime();
+            switch_worlds(false, true);
         }
     }
+
+    //function to take in and switch which world is active (OR set both)
+    //take the arguement of:
+    //BOOL: world 1 status (active or inactive)
+    //BOOL: world 2 status (active or inactive)
+    void switch_worlds(bool world_1_status, bool world_2_status) {
+        switch_world(world_2_assets, world_1_status);
+        switch_world(world_1_assets, world_2_status);
+    }
+    
+    //function to slow time on world change
+
+    void slowTime() {
+        time_Is_Slowed = true;
+        Debug.Log(Time.timeScale.ToString());
+        //grab time and set to our slowdownFactor
+        Time.timeScale = slowdownFactor;
+        //adjust fixed delta time to smooth frames
+        Time.fixedDeltaTime = Time.timeScale * .02f;
+    }
+    void adjustTime() {
+        Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
+        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+    }
+
+    void check_for_slowtime_end() {
+        Debug.Log(Time.timeScale.ToString());
+        Debug.Log(starting_timeScale.ToString());
+        if (Time.timeScale == starting_timeScale) {
+            Time.fixedDeltaTime = starting_deltaTime;
+            time_Is_Slowed = false;
+        }
+    }
+
 
 }
