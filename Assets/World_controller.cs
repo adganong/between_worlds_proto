@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class World_controller : MonoBehaviour {
     //declared variables
@@ -53,6 +55,12 @@ public class World_controller : MonoBehaviour {
             switch_world(world_2_assets, false);
             switch_world(world_1_assets, true);
         }
+    }
+
+    IEnumerator doSomething()
+    {
+            //do something here
+            yield return WaitForSeconds(10);
     }
 
 }
