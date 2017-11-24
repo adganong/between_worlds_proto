@@ -2,14 +2,21 @@
 
 public class Player_Controller : MonoBehaviour {
     //initilzation
-    public int playerSpeed = 10;
-    public bool facingRight = true;
-    public float playerJumpPower = 1250;
+    Rigidbody2D playersRigidbody;
+
+    public int playerSpeed          = 10;
+    public bool facingRight         = true;
+    public float playerJumpPower    = 1250;
+    public float fallMultiplier     = -2.5f;
+    public float lowJumpMultiplier  = 2f;
+    public int jumpcount            = 2;
+
     public float moveX;
-    public int jumpcount = 2;
     public bool isGrounded;
 
-
+    private void Awake() {
+        playersRigidbody = GetComponent<Rigidbody2D> ();
+    }
     // Update is called once per frame
     void Update() {
         PlayerMove();
@@ -19,7 +26,7 @@ public class Player_Controller : MonoBehaviour {
         bool testIfRunning;
         //Controls
         moveX = Input.GetAxis("Horizontal");
-        if (Input.GetButtonDown("Jump") && jumpcount < 2) {
+        if (Input.GetButtonDown("Jump") && jumpcount < 1) {
             jumpcount++;
             Jump();
         }
@@ -36,6 +43,12 @@ public class Player_Controller : MonoBehaviour {
         }
         //physics
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
+
+        if (playersRigidbody.velocity.y > 0) {
+            changeGravity(fallMultiplier);
+        } else if (playersRigidbody.velocity.y > 0 && !Input.GetButton ("Jump")) {
+            changeGravity(lowJumpMultiplier);
+        }
     }
 
     void Jump() {
@@ -50,6 +63,10 @@ public class Player_Controller : MonoBehaviour {
         //how to check the name of what was hit. This is not useful
         //if (collision.collider.name == "Ground") {
         resetJump();
+    }
+
+    void changeGravity(float changeBy) {
+        playersRigidbody.velocity += Vector2.up * Physics2D.gravity.y * (changeBy - 1) * Time.deltaTime;
     }
 
     void OnTriggerEnter2D(Collider2D trig) {
