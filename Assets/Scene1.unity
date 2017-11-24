@@ -686,9 +686,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 10
   facingRight: 1
-  playerJumpPower: 400
-  moveX: 0
+  playerJumpPower: 500
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
   jumpcount: 2
+  moveX: 0
   isGrounded: 0
 --- !u!50 &2042319219
 Rigidbody2D:

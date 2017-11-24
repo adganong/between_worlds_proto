@@ -6,7 +6,7 @@ public class World_controller : MonoBehaviour {
     //declared variables
     public int world                    = 2;
     private bool switching_worlds       = false;
-    public float slowdownFactor         = 0.03f;
+    public float slowdownFactor         = 0.02f;
     public float slowdownLength         = .5f;
     private bool time_Is_Slowed;
     private float starting_timeScale;
@@ -35,13 +35,14 @@ public class World_controller : MonoBehaviour {
         //check if the player is switching, and if he is, switch worlds
         update_switch();
         if (switching_worlds) {
+            adjustTime();
             toggle_worlds();
         }
     }
 
     void FixedUpdate() {
         //check if the player is switching, and if he is, switch worlds
-        //adjustTime();
+        
         //if (time_Is_Slowed) {
             //check_for_slowtime_end();
         //}
@@ -69,11 +70,11 @@ public class World_controller : MonoBehaviour {
     void toggle_worlds() {
         if(world == 1) {
             world = 2;
-            //slowTime();
+            slowTime();
             switch_worlds(true, false);
         } else if (world == 2) {
             world = 1;
-            //slowTime();
+            slowTime();
             switch_worlds(false, true);
         }
     }
@@ -98,17 +99,12 @@ public class World_controller : MonoBehaviour {
     }
     void adjustTime() {
         Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
+        Time.fixedDeltaTime += (1f / slowdownLength) * Time.unscaledDeltaTime;
         Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
     }
 
     void check_for_slowtime_end() {
-        Debug.Log(Time.timeScale.ToString());
-        Debug.Log(starting_timeScale.ToString());
-        if (Time.timeScale == starting_timeScale) {
-            Debug.Log("Made it inside the end");
-            Time.fixedDeltaTime = starting_deltaTime;
-            time_Is_Slowed = false;
-        }
+        
     }
 
 
