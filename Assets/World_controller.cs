@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class World_controller : MonoBehaviour {
     //declared variables
-    public int world                    = 1;
+    public int world                    = 2;
     private bool switching_worlds       = false;
     public float slowdownFactor         = 0.03f;
     public float slowdownLength         = .5f;
