@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class World_controller : MonoBehaviour {
     //declared variables
-    public int world                    = 2;
+    public int world                    = 1;
     private bool switching_worlds       = false;
-    public float slowdownFactor         = 0.02f;
-    public float slowdownLength         = .5f;
-    private bool time_Is_Slowed;
-    private float starting_timeScale;
-    private float starting_deltaTime;
 
     //undeclared variables
     private GameObject[] world_1_assets;
@@ -21,13 +16,10 @@ public class World_controller : MonoBehaviour {
         //call function to get me the array of all objects in the worlds
         world_1_assets          = get_world_assets("world_1");
         world_2_assets          = get_world_assets("world_2");
-        starting_timeScale      = Time.timeScale;
-        starting_deltaTime      = Time.fixedDeltaTime;
-        time_Is_Slowed          = false;
 
         //call toggle for the first time to make sure only one world is showing (this could be done in a much cleaner way)
         switch_worlds(true, false);
-
+        world = 2;
     }
 
     // Update is called once per frame
@@ -35,17 +27,12 @@ public class World_controller : MonoBehaviour {
         //check if the player is switching, and if he is, switch worlds
         update_switch();
         if (switching_worlds) {
-            adjustTime();
             toggle_worlds();
         }
     }
 
     void FixedUpdate() {
-        //check if the player is switching, and if he is, switch worlds
-        
-        //if (time_Is_Slowed) {
-            //check_for_slowtime_end();
-        //}
+        //nothing here yet
     }
 
     //function to check for switch keypress
@@ -70,11 +57,9 @@ public class World_controller : MonoBehaviour {
     void toggle_worlds() {
         if(world == 1) {
             world = 2;
-            slowTime();
             switch_worlds(true, false);
         } else if (world == 2) {
             world = 1;
-            slowTime();
             switch_worlds(false, true);
         }
     }
@@ -87,25 +72,4 @@ public class World_controller : MonoBehaviour {
         switch_world(world_2_assets, world_1_status);
         switch_world(world_1_assets, world_2_status);
     }
-    
-    //function to slow time on world change
-
-    void slowTime() {
-        time_Is_Slowed = true;
-        //grab time and set to our slowdownFactor
-        Time.timeScale = slowdownFactor;
-        //adjust fixed delta time to smooth frames
-        Time.fixedDeltaTime = Time.timeScale * .02f;
-    }
-    void adjustTime() {
-        Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
-        Time.fixedDeltaTime += (1f / slowdownLength) * Time.unscaledDeltaTime;
-        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
-    }
-
-    void check_for_slowtime_end() {
-        
-    }
-
-
 }
