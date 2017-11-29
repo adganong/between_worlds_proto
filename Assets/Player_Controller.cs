@@ -4,12 +4,18 @@ public class Player_Controller : MonoBehaviour {
     //initilzation
     Rigidbody2D playersRigidbody;
 
-    public int playerSpeed          = 10;
+    public float playerSpeed        = 10f;
     public bool facingRight         = true;
     public float playerJumpPower    = 1250;
     public float fallMultiplier     = 2.5f;
     public float lowJumpMultiplier  = 2f;
     public int jumpcount            = 2;
+
+    public float friction           = 0.5f; //dunno how to use this
+
+    public float acceleration       = 1.1f;
+    public float speed_min          = 6f;
+    public float speed_max          = 10f;
 
     //control input checks 
     bool is_moving;
@@ -20,6 +26,7 @@ public class Player_Controller : MonoBehaviour {
     public bool isGrounded;
 
     private void Awake() {
+        playerSpeed = speed_min;
         playersRigidbody = GetComponent<Rigidbody2D> ();
     }
     // Update is called once per frame
@@ -52,6 +59,11 @@ public class Player_Controller : MonoBehaviour {
     }
 
     void Move(float moveValue) {
+        if (playerSpeed < speed_max) {
+            playerSpeed *= acceleration;
+        } else if (moveValue == 0) {
+            playerSpeed = speed_min;
+        }
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveValue * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
     }
 
