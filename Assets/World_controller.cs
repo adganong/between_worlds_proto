@@ -7,6 +7,23 @@ public class World_controller : MonoBehaviour {
     public int world                    = 1;
     private bool switching_worlds       = false;
 
+    public float slow_down_length   = 2f;
+    public float slow_down_factor   = 0.05f;
+    
+
+    private void slow_down_time() {
+        Time.timeScale = slow_down_factor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+    }
+
+    private void adjust_time() {
+        Time.timeScale += (1f / slow_down_length) * Time.fixedDeltaTime;
+        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+    }
+
     //undeclared variables
     private GameObject[] world_1_assets;
     private GameObject[] world_2_assets;
@@ -18,19 +35,16 @@ public class World_controller : MonoBehaviour {
         world_2_assets          = get_world_assets("world_2");
 
         //call toggle for the first time to make sure only one world is showing (this could be done in a much cleaner way)
-<<<<<<< HEAD
         switch_worlds(true, false);
         world = 2;
-=======
-        switch_worlds(false, true);
 
-        world = 1;
->>>>>>> changing_movement_script
+        
     }
 
     // Update is called once per frame
     void Update() {
         //check if the player is switching, and if he is, switch worlds
+        adjust_time();
         update_switch();
         if (switching_worlds) {
             toggle_worlds();
@@ -38,11 +52,7 @@ public class World_controller : MonoBehaviour {
     }
 
     void FixedUpdate() {
-<<<<<<< HEAD
         //nothing here yet
-=======
-        
->>>>>>> changing_movement_script
     }
 
     //function to check for switch keypress
@@ -67,9 +77,11 @@ public class World_controller : MonoBehaviour {
     void toggle_worlds() {
         if(world == 1) {
             world = 2;
+            slow_down_time();
             switch_worlds(true, false);
         } else if (world == 2) {
             world = 1;
+            slow_down_time();
             switch_worlds(false, true);
         }
     }
@@ -82,4 +94,7 @@ public class World_controller : MonoBehaviour {
         switch_world(world_2_assets, world_1_status);
         switch_world(world_1_assets, world_2_status);
     }
+
+    
+
 }
