@@ -18,8 +18,14 @@ public class World_controller : MonoBehaviour {
         world_2_assets          = get_world_assets("world_2");
 
         //call toggle for the first time to make sure only one world is showing (this could be done in a much cleaner way)
+<<<<<<< HEAD
         switch_worlds(true, false);
         world = 2;
+=======
+        switch_worlds(false, true);
+
+        world = 1;
+>>>>>>> changing_movement_script
     }
 
     // Update is called once per frame
@@ -32,7 +38,11 @@ public class World_controller : MonoBehaviour {
     }
 
     void FixedUpdate() {
+<<<<<<< HEAD
         //nothing here yet
+=======
+        
+>>>>>>> changing_movement_script
     }
 
     //function to check for switch keypress
