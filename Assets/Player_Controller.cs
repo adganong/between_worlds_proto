@@ -20,6 +20,7 @@ public class Player_Controller : MonoBehaviour {
     //control input checks 
     bool is_moving;
     bool is_jumping;
+    bool is_visceral;
 
 
     public float moveX;
@@ -31,23 +32,27 @@ public class Player_Controller : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+        check_inputs();
         PlayerMove();
     }
 
     void PlayerMove() {
         //check all inputs 
-        check_inputs();
-        //check if jumping, and act accordingly
-        if (is_jumping && jumpcount < 1) {
-            jumpcount++;
-            Jump();
+        if (!is_visceral) {
+            //check if jumping, and act accordingly
+            if (is_jumping && jumpcount < 1) {
+                jumpcount++;
+                Jump();
+            }
+            //move in the moveX direction (this is set when input is checked
+            Move(moveX);
+            //check if the direction has changed, and flip sprite if so
+            CheckDirectionAndFlipSprite(moveX);
+            //modifyc the gravity according to set inputs to change how the jump works 
+            modify_gravity_on_jump();
+        } else if (is_visceral) {
+
         }
-        //move in the moveX direction (this is set when input is checked
-        Move(moveX);
-        //check if the direction has changed, and flip sprite if so
-        CheckDirectionAndFlipSprite(moveX);
-        //modifyc the gravity according to set inputs to change how the jump works 
-        modify_gravity_on_jump();
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -90,6 +95,7 @@ public class Player_Controller : MonoBehaviour {
     private void check_inputs() {
         is_jumping  = Input.GetButton("Jump") ? true : false;
         moveX = Input.GetAxis("Horizontal");
+        check_for_visceral();
     }
 
     private void modify_gravity_on_jump () {
@@ -97,6 +103,16 @@ public class Player_Controller : MonoBehaviour {
             changeGravity(fallMultiplier);
         } else if (playersRigidbody.velocity.y > 0 && !is_jumping) {
             changeGravity(lowJumpMultiplier);
+        }
+    }
+
+    private void check_for_visceral() {
+        if (Input.GetKeyDown(KeyCode.W) && !is_visceral) {
+            Debug.Log("It has been pressed");
+            is_visceral = true;
+        } else if (Input.GetKeyDown(KeyCode.W) && is_visceral) {
+            Debug.Log("It has been pressed");
+            is_visceral = false;
         }
     }
 
