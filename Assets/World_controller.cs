@@ -7,21 +7,19 @@ public class World_controller : MonoBehaviour {
     public int world                    = 1;
     private bool switching_worlds       = false;
 
-    public float slow_down_length   = 2f;
-    public float slow_down_factor   = 0.05f;
-    
+    public float slow_down_length   = 1f;
+    public float slow_down_factor   = 0.01f;
 
     private void slow_down_time() {
         Time.timeScale = slow_down_factor;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
-
+        Invoke("adjust_time", 1f);
     }
 
     private void adjust_time() {
-        Time.timeScale += (1f / slow_down_length) * Time.fixedDeltaTime;
-        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+        Time.timeScale= 1;
+        //Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
-
     }
 
     //undeclared variables
@@ -94,7 +92,5 @@ public class World_controller : MonoBehaviour {
         switch_world(world_2_assets, world_1_status);
         switch_world(world_1_assets, world_2_status);
     }
-
-    
 
 }

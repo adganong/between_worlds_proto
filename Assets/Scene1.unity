@@ -289,6 +289,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: 1
+  slow_down_length: 2
+  slow_down_factor: 0.05
 --- !u!4 &1161759681
 Transform:
   m_ObjectHideFlags: 0
@@ -489,7 +491,7 @@ MonoBehaviour:
   lowJumpMultiplier: 2
   jumpcount: 2
   friction: 0.5
-  acceleration: 1.1
+  acceleration: 1.05
   speed_min: 6
   speed_max: 10
   moveX: 0

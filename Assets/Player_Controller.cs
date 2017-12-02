@@ -13,7 +13,7 @@ public class Player_Controller : MonoBehaviour {
 
     public float friction           = 0.5f; //dunno how to use this
 
-    public float acceleration       = 1.1f;
+    public float acceleration       = 1.05f;
     public float speed_min          = 6f;
     public float speed_max          = 10f;
 
@@ -45,7 +45,8 @@ public class Player_Controller : MonoBehaviour {
                 Jump();
             }
             //move in the moveX direction (this is set when input is checked
-            Move(moveX);
+            update_movement();
+            MoveXY();
             //check if the direction has changed, and flip sprite if so
             CheckDirectionAndFlipSprite(moveX);
             //modifyc the gravity according to set inputs to change how the jump works 
@@ -63,15 +64,19 @@ public class Player_Controller : MonoBehaviour {
         GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpPower);
     }
 
-    void Move(float moveValue) {
-        if (playerSpeed < speed_max) {
-            playerSpeed *= acceleration;
-        } else if (moveValue == 0) {
+    void MoveXY() {
+        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
+    }
+    private void update_movement() {
+        if(moveX != 0) {
+            if (playerSpeed < speed_max) {
+                Debug.Log(playerSpeed.ToString());
+                playerSpeed *= acceleration;
+            }
+        } else {
             playerSpeed = speed_min;
         }
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(moveValue * playerSpeed, gameObject.GetComponent<Rigidbody2D>().velocity.y);
     }
-
     void CheckDirectionAndFlipSprite(float moveValue) {
         if (moveValue > 0.0f) {
             GetComponent<SpriteRenderer>().flipX = false;
