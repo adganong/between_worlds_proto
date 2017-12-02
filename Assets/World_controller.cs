@@ -7,16 +7,19 @@ public class World_controller : MonoBehaviour {
     public int world                    = 1;
     private bool switching_worlds       = false;
 
-    public float slow_down_length   = 1f;
-    public float slow_down_factor   = 0.01f;
+    private float slow_down_length   = 1f;
+    private float slow_down_factor   = 0.1f;
 
     private void slow_down_time() {
-        Time.timeScale = slow_down_factor;
-        Time.fixedDeltaTime = Time.timeScale * 0.02f;
-        Invoke("adjust_time", 1f);
+        Invoke("adjust_time", slow_down_length);
+        //Time.timeScale = slow_down_factor;
+        //Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        
+
     }
 
     private void adjust_time() {
+        Debug.Log("this has been called");
         Time.timeScale= 1;
         //Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
@@ -42,7 +45,6 @@ public class World_controller : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         //check if the player is switching, and if he is, switch worlds
-        adjust_time();
         update_switch();
         if (switching_worlds) {
             toggle_worlds();

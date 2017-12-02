@@ -70,7 +70,6 @@ public class Player_Controller : MonoBehaviour {
     private void update_movement() {
         if(moveX != 0) {
             if (playerSpeed < speed_max) {
-                Debug.Log(playerSpeed.ToString());
                 playerSpeed *= acceleration;
             }
         } else {
