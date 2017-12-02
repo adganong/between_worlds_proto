@@ -7,22 +7,41 @@ public class World_controller : MonoBehaviour {
     public int world                    = 1;
     private bool switching_worlds       = false;
 
-    private float slow_down_length   = 1f;
-    private float slow_down_factor   = 0.1f;
+    private float slow_down_length   = .1f;
+    private float slow_down_factor   = 0.0001f;
+
+    private bool time_is_slowed = false;
+    private float time_stamp = 0f;
 
     private void slow_down_time() {
-        Invoke("adjust_time", slow_down_length);
-        //Time.timeScale = slow_down_factor;
-        //Time.fixedDeltaTime = Time.timeScale * 0.02f;
-        
-
+        time_is_slowed = true;
+        time_stamp = Time.fixedUnscaledTime;
+        Time.timeScale = slow_down_factor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
 
     private void adjust_time() {
-        Debug.Log("this has been called");
-        Time.timeScale= 1;
-        //Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
-        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        if (time_is_slowed) {
+            if((time_stamp + slow_down_length) < Time.fixedUnscaledTime) {
+                time_is_slowed = false;
+                time_stamp = 0f;
+                Time.timeScale = 1;
+                //Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+                Time.fixedDeltaTime = Time.timeScale * 0.02f;
+            }
+        } else {
+            put("Time is not yet slowed");
+        }
+    }
+    private bool itiscalled = false;
+
+    private void print_time() {
+        if (time_is_slowed ) {
+            put("time is indeed slowed");
+            put((Time.fixedUnscaledTime).ToString());
+        } else {
+            put((Time.fixedUnscaledTime).ToString());
+        }
     }
 
     //undeclared variables
@@ -38,12 +57,12 @@ public class World_controller : MonoBehaviour {
         //call toggle for the first time to make sure only one world is showing (this could be done in a much cleaner way)
         switch_worlds(true, false);
         world = 2;
-
-        
     }
 
     // Update is called once per frame
     void Update() {
+        print_time();
+        adjust_time();
         //check if the player is switching, and if he is, switch worlds
         update_switch();
         if (switching_worlds) {
@@ -95,4 +114,7 @@ public class World_controller : MonoBehaviour {
         switch_world(world_1_assets, world_2_status);
     }
 
+    private void put(string the_messgae) {
+        Debug.Log(the_messgae);
+    }
 }
