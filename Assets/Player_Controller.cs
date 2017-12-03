@@ -6,7 +6,7 @@ public class Player_Controller : MonoBehaviour {
 
     public float playerSpeed        = 10f;
     public bool facingRight         = true;
-    public float playerJumpPower    = 1250;
+    public float playerJumpPower    = 400;
     public float fallMultiplier     = 2.5f;
     public float lowJumpMultiplier  = 2f;
     public int jumpcount            = 2;
@@ -61,7 +61,8 @@ public class Player_Controller : MonoBehaviour {
     }
 
     void Jump() {
-        GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpPower);
+        put((Vector2.up * playerJumpPower * (1f / Time.fixedDeltaTime) * 0.03f).ToString());
+        GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpPower * (1f / Time.fixedDeltaTime) * 0.03f);
     }
 
     void MoveXY() {
@@ -118,6 +119,10 @@ public class Player_Controller : MonoBehaviour {
             Debug.Log("It has been pressed");
             is_visceral = false;
         }
+    }
+
+    private void put(string theMessage) {
+        Debug.Log(theMessage);
     }
 
 }
